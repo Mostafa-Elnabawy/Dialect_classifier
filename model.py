@@ -1,7 +1,5 @@
 import json
 import requests
+import data_retrieval
 
-
-url = "https://recruitment.aimtechnologies.co/ai-tasks"
-response = requests.post(url, data = json.dumps(['1175358310087892992']))
-print(response.text)
+print(data_retrieval.data_with_text.info())
