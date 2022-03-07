@@ -10,12 +10,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn import metrics
-
-
-data = pd.read_csv('complete_data.csv')
-data.drop_duplicates(inplace=True)
-data.dropna(inplace=True)
-data_cleaned = data[data.text.apply(lambda line : type(line) == str)]
+import pickle
 
 def clean_data_text(text_col):
     # removing hashtags and mentions
@@ -47,23 +42,32 @@ def clean_data_text(text_col):
 #     print('Done ALL')
     return stopwords_deleted
 
-cleaner_trans = FunctionTransformer(clean_data_text)
-data_cleaned['text'] = cleaner_trans.fit_transform(data_cleaned['text'])
 
-# Naive bayes model training
-X_train , X_test , y_train , y_test = train_test_split(data_cleaned['text'],data_cleaned['dialect'],test_size=0.3,random_state=42)
-count_vectorizer = CountVectorizer()
-count_train = count_vectorizer.fit_transform(X_train)
-Encoder = LabelEncoder()
-y_train_labeled = Encoder.fit_transform(y_train)
-nb_classifier = MultinomialNB()
-nb_classifier.fit(count_train, y_train_labeled)
-pred = nb_classifier.predict(count_train)
-score = metrics.accuracy_score(y_train_labeled ,pred )
-print("train score " , score)
-#Evaluating on Test Data
-count_test = count_vectorizer.transform(X_test)
-y_test_labeled = Encoder.transform(y_test)
-pred = nb_classifier.predict(count_test)
-score = metrics.accuracy_score(y_test_labeled ,pred )
-print("test score ", score)
+cleaner_trans = FunctionTransformer(clean_data_text)
+if __name__ == "__main__" :
+    data = pd.read_csv('complete_data.csv')
+    data.drop_duplicates(inplace=True)
+    data.dropna(inplace=True)
+    data_cleaned = data[data.text.apply(lambda line : type(line) == str)]
+    data_cleaned['text'] = cleaner_trans.fit_transform(data_cleaned['text'])
+
+    # Naive bayes model training
+    X_train , X_test , y_train , y_test = train_test_split(data_cleaned['text'],data_cleaned['dialect'],test_size=0.3,random_state=42)
+    count_vectorizer = CountVectorizer()
+    count_train = count_vectorizer.fit_transform(X_train)
+    pickle.dump(count_vectorizer, open("count_vectorizer.sav", 'wb'))
+    Encoder = LabelEncoder()
+    y_train_labeled = Encoder.fit_transform(y_train)
+    pickle.dump(Encoder, open("Encoder.sav", 'wb'))
+    nb_classifier = MultinomialNB()
+    nb_classifier.fit(count_train, y_train_labeled)
+    pickle.dump(nb_classifier, open("model.pkl", 'wb'))
+    pred = nb_classifier.predict(count_train)
+    score = metrics.accuracy_score(y_train_labeled ,pred )
+    print("train score " , score)
+    #Evaluating on Test Data
+    count_test = count_vectorizer.transform(X_test)
+    y_test_labeled = Encoder.transform(y_test)
+    pred = nb_classifier.predict(count_test)
+    score = metrics.accuracy_score(y_test_labeled ,pred )
+    print("test score ", score)
