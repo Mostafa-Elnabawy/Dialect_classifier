@@ -9,4 +9,4 @@ with pd.read_csv("dialect_dataset.csv",chunksize=1000) as reader:
         response = requests.post(url, data = json.dumps(list(map(str,chunk['id']))))
         chunk['text'] = dict(response.json()).values()
         data_with_text = pd.concat([data_with_text , chunk])
-print(data_with_text.info())
+data_with_text.to_csv('complete_data.csv')
