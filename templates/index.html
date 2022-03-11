@@ -1,9 +1,15 @@
-{% extends "base.html" %}
-{%block title%}Return prediction{%endblock%}
+{% extends 'base.html' %}
+{% block title %}prediction page{% endblock %}
+{% block content %}
+    <form action="#" method="post">
+        <input type="text" class="text" name="phrase">
+        <span>Speak your dialect</span>
 
-{%block content%}
-<form action="#" method="post">
-    <p>You are {{text}}</p>
-    <p><input type="submit" value="Make another prediction"/></p>
-</form>
-{%endblock%}
+        <br>
+
+        <br>
+        <button class="signin">
+            Predict
+        </button>
+    </form>
+{% endblock %}

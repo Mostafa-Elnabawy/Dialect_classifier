@@ -1,10 +1,9 @@
 {% extends "base.html" %}
-{%block title%}Login Page{%endblock%}
+{%block title%}Return prediction{%endblock%}
 
 {%block content%}
 <form action="#" method="post">
-    <p>Name:</p>
-    <p><input type="text" name="sentence"/></p>
-    <p><input type="submit" value="predict"/></p>
+    <h2 class="active"> You are {{text}} </h2>
+    <input class="signin" type="submit" value="Make another prediction"/>
 </form>
 {%endblock%}
