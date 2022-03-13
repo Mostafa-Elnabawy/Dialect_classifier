@@ -11,6 +11,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn import metrics
 import pickle
+from imblearn.over_sampling import SMOTE
 
 def clean_data_text(text_col):
     # removing hashtags and mentions
@@ -56,11 +57,14 @@ if __name__ == "__main__" :
     count_vectorizer = CountVectorizer()
     count_train = count_vectorizer.fit_transform(X_train)
     pickle.dump(count_vectorizer, open("count_vectorizer.sav", 'wb'))
+    #over_sampling test_accuracy = 0.5
+    sm = SMOTE(random_state = 42)
+    X_train_res, y_train_res = sm.fit_resample(count_train , y_train)
     Encoder = LabelEncoder()
-    y_train_labeled = Encoder.fit_transform(y_train)
+    y_train_labeled = Encoder.fit_transform(y_train_res)
     pickle.dump(Encoder, open("Encoder.sav", 'wb'))
     nb_classifier = MultinomialNB()
-    nb_classifier.fit(count_train, y_train_labeled)
+    nb_classifier.fit(X_train_res, y_train_labeled)
     pickle.dump(nb_classifier, open("model.pkl", 'wb'))
     pred = nb_classifier.predict(count_train)
     score = metrics.accuracy_score(y_train_labeled ,pred )
