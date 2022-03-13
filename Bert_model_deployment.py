@@ -2,7 +2,7 @@
 import re
 from flask import Flask, redirect , url_for , render_template , request, session
 from datetime import timedelta
-from model import cleaner_trans
+from NV_training import cleaner_trans
 import pickle
 import torch
 from transformers import BertTokenizer, BertForSequenceClassification
