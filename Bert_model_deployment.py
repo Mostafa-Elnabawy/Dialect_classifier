@@ -25,7 +25,7 @@ class Dataset(torch.utils.data.Dataset):
 
 tokenizer = BertTokenizer.from_pretrained("asafaya/bert-base-arabic")
 app = Flask(__name__)
-Encoder = pickle.load(open("Encoder.sav", 'rb'))
+Encoder = pickle.load(open("Bert_Encoder.sav", 'rb'))
 app.secret_key = "hello" #to encode and decode our data
 
 nationalities = {
